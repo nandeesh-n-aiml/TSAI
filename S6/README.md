@@ -12,3 +12,22 @@ The below image refers to the backpropagation calculated using excel. The [`back
 - The `Derivatives` section (highlighted) in the table calculates the gradient for each weight in the network.
 - Based on the gradient, the corresponding weights are updated.
 - The total loss is calculated everytime after all the weights are updated. The calculations are performed ~100 times to reduce the loss which can also be noted from the plot.
+
+### Visualise loss for different learning rates:
+Learning rate: 0.1
+<img src="./images/LR_0.1.png" />
+
+Learning rate: 0.2
+<img src="./images/LR_0.2.png" />
+
+Learning rate: 0.5
+<img src="./images/LR_0.5.png" />
+
+Learning rate: 0.8
+<img src="./images/LR_0.8.png" />
+
+Learning rate: 1
+<img src="./images/LR_1.png" />
+
+Learning rate: 2
+<img src="./images/LR_2.png" />
