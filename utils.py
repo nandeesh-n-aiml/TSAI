@@ -5,7 +5,9 @@ import torch
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def build_loader(batch_size, train_data, test_data):
-    """ """
+    """
+    Returns train loader and test loader based on the batch_size, training and testing dataset.
+    """
     kwargs = {
         "batch_size": batch_size,
         "shuffle": True,

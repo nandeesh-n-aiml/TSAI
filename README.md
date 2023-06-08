@@ -23,8 +23,9 @@ train_loader, test_loader = build_loader(batch_size, train_data, test_data)
 The code snippet below creates a model. `model_train` trains the model on train_loader and `model_test` tests the model on the test_loader.
 ```
 model = Net().to(device)
-model.model_train(train_loader, optimizer, criterion)
-model.model_test(test_loader, criterion)
+for epoch in range(1, num_epochs+1):
+    model.model_train(train_loader, optimizer, criterion)
+    model.model_test(test_loader, criterion)
 ```
 
 To visualize the model's performance, execute the below script.

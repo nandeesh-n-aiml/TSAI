@@ -36,6 +36,9 @@ class Net(nn.Module):
         return pPrediction.argmax(dim=1).eq(pLabels).sum().item()
 
     def model_train(self, train_loader, optimizer, criterion):
+        """
+        Trains the neural network based on the train_loader and computes the training loss based on the criterion.
+        """
         self.train()
         pbar = tqdm(train_loader)
 
@@ -70,6 +73,9 @@ class Net(nn.Module):
         return self.train_acc[-1], self.train_losses[-1]
 
     def model_test(self, test_loader, criterion):
+        """
+        Evaluates the neural network based on the test_loader and computes the testing loss based on the criterion.
+        """
         self.eval()
         test_loss = 0
         correct = 0
