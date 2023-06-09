@@ -42,7 +42,7 @@ Learning rate: 2
 **Requirement:** Training a CNN model having less than 20K parameters. The network should be able to achieve 99.4% validation accuracy within 20 epochs.
 
 **Solution:**  
-Parameters: 16,974  
+Parameters: 16,794  
 Validation accuracy: 99.29%  
 Epochs: 20  
 Used 1x1 convolution + GAP
