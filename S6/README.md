@@ -39,12 +39,24 @@ Learning rate: 2
 <img src="./images/LR_2.png" />
 
 # PART 2
-**Requirement:** Training a CNN model having less than 20K parameters. The network should be able to achieve 99.4% validation accuracy within 20 epochs.
+### Requirement:
+Train a CNN model having less than 20K parameters. The network should be able to achieve 99.4% validation accuracy within 20 epochs.
 
-**Solution:**  
-Parameters: 16,794  
-Validation accuracy: 99.29%  
-Epochs: 20  
+### Solution Summary:  
+Parameters: 18,482  
+Validation accuracy: 99.46%  
+Epoch: 6  
 Used 1x1 convolution + GAP
+
+### Model Architecture:  
+The below image shows the CNN model architecture. The model consists of 3 blocks of convolution layers followed by 1x1 convolution + GAP layers. Each block consists of 2 conv2d layers with a padding set to 1 followed by max pooling and batch normalization.  
+The model is able to achieve 99.46% validation accuracy at epoch 6.
+
+<img src="./images/CNN_Architecture.png" />
+
+### Receptive field calculation:
+The below image shows the RF calculation. It can be noted that the RF achieved through the proposed network is **52** for an image size of 28x28.
+
+<img src="./images/RF_Calculation.png" /> 
 
 The notebook can be found [here](./S6.ipynb).
