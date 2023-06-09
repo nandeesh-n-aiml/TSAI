@@ -14,30 +14,37 @@ The below image refers to the backpropagation calculated using excel. The [`back
 - The total loss is calculated everytime after all the weights are updated. The calculations are performed ~100 times to reduce the loss which can also be noted from the plot.
 
 ### Visualise loss for different learning rates:
-Learning rate: 0.1
+Learning rate: 0.1  
+
 <img src="./images/LR_0.1.png" />
 
-Learning rate: 0.2
+Learning rate: 0.2  
+
 <img src="./images/LR_0.2.png" />
 
-Learning rate: 0.5
+Learning rate: 0.5  
+
 <img src="./images/LR_0.5.png" />
 
-Learning rate: 0.8
+Learning rate: 0.8  
+
 <img src="./images/LR_0.8.png" />
 
-Learning rate: 1
+Learning rate: 1  
+
 <img src="./images/LR_1.png" />
 
-Learning rate: 2
+Learning rate: 2  
+
 <img src="./images/LR_2.png" />
 
 # PART 2
 **Requirement:** Training a CNN model having less than 20K parameters. The network should be able to achieve 99.4% validation accuracy within 20 epochs.
 
 **Solution:**  
-Parameters: 18,418  
-Validation accuracy: 99.26%  
+Parameters: 16,974  
+Validation accuracy: 99.29%  
+Epochs: 20  
 Used 1x1 convolution + GAP
 
 The notebook can be found [here](./S6.ipynb).
