@@ -1,3 +1,19 @@
+"""
+TARGET:
+    - Get the setup right
+    - Set data transforms
+    - Set data loaders
+    - Set basic working code
+    - Set basic training and testing loop
+RESULT:
+    - Parameters: 6,379,786
+    - Best training accuracy: 100%
+    - Best testing accuracy: 99.35%
+ANALYSIS:
+    - Heavy model for MNIST dataset
+    - Model is overfitting
+"""
+
 import torch.nn as nn
 import torch.nn.functional as F
 from . import model_composite as mc

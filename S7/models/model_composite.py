@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
-# import torch.nn.functional as F
 from tqdm import tqdm
+import matplotlib.pyplot as plt
 
 class Model_Composite(nn.Module):
     def __init__(self):
@@ -73,7 +73,13 @@ class Model_Composite(nn.Module):
 
 
     def plot_accuracy(self):
-        pass
+        epochs = list(range(1, len(self.train_accuracy) + 1))
+        plt.plot(epochs, self.train_accuracy, label='Train accuracy')
+        plt.plot(epochs, self.test_accuracy, label='Test accuracy')
+        plt.legend()
 
     def plot_loss(self):
-        pass
+        epochs = list(range(1, len(self.train_accuracy) + 1))
+        plt.plot(epochs, self.train_losses, label='Train loss')
+        plt.plot(epochs, self.test_losses, label='Test loss')
+        plt.legend()
