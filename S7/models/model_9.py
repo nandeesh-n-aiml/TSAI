@@ -1,23 +1,22 @@
 """
 TARGET:
-    - Add transition block when RF is 5
-    - Distribute the weight across all the layers
+    - Slightly reduce the parameters to achieve 99.4% test accuracy
 RESULT:
-    - Parameters: 13,828
-    - Best training accuracy: 99.38%
-    - Best testing accuracy: 99.49%
+    - Parameters: 11,492
+    - Best training accuracy: 99.24%
+    - Best testing accuracy: 99.34%
 ANALYSIS:
     - The model is not over-fitting
-    - The model reached 99.4% accuracy 5 times within 15 epochs but with 13k parameters
+    - The model has potential to learn
 """
 
 import torch.nn as nn
 import torch.nn.functional as F
 from . import model_composite as mc
 
-class Net_8(mc.Model_Composite):
+class Net_9(mc.Model_Composite):
     def __init__(self):
-        super(Net_8, self).__init__()
+        super(Net_9, self).__init__()
         dropout_val = 0.1
         self.convblock1 = nn.Sequential(
             nn.Conv2d(1, 16, 3, padding=0, bias=False),
@@ -46,14 +45,14 @@ class Net_8(mc.Model_Composite):
             nn.BatchNorm2d(16),
                 nn.ReLU(),
             nn.Dropout(dropout_val),
-            nn.Conv2d(16, 16, 3, padding=0, bias=False),
-            nn.BatchNorm2d(16),
-                nn.ReLU(),
-            nn.Dropout(dropout_val)
-        ) # Receptive Field: 18
+            # nn.Conv2d(16, 16, 3, padding=0, bias=False),
+            # nn.BatchNorm2d(16),
+            #     nn.ReLU(),
+            # nn.Dropout(dropout_val)
+        ) # Receptive Field: 14
 
         self.convblock3 = nn.Sequential(
-            nn.Conv2d(16, 16, 3, padding=0, bias=False),
+            nn.Conv2d(16, 16, 3, padding=0, bias=False), # RF: 18
             nn.BatchNorm2d(16),
                 nn.ReLU(),
             nn.AdaptiveAvgPool2d((1, 1)),
