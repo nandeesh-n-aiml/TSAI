@@ -56,7 +56,7 @@ class Net_5(mc.Model_Composite):
                 nn.ReLU(),
             nn.Dropout(0.05),
             nn.Conv2d(10, 10, 7, padding=0, bias=False)
-        ) # Receptive Field: 32
+        ) # Receptive Field: 28
 
     def forward(self, x):
         x = self.pool1(self.convblock1(x))
