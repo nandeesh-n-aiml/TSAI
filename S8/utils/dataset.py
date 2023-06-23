@@ -44,7 +44,6 @@ class Dataset:
 
     def normalize_dataset(self):
         mean, std = self.get_moments()
-        print(mean, std)
         mean, std = tuple(mean), tuple(std)
         self.dt \
             .set_mean(mean) \
@@ -55,7 +54,10 @@ class Dataset:
             .set_test_data()
 
     # train & test dataloaders
-    def get_data_loaders(self):
+    def get_data_loaders(self, reset=True):
+        if reset:
+            self.set_train_data() \
+                .set_test_data()
         train_loader = torch.utils.data.DataLoader(self.train, **self.dataloader_cfgs)
         test_loader = torch.utils.data.DataLoader(self.test, **self.dataloader_cfgs)
         return (train_loader, test_loader)

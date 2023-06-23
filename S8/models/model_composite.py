@@ -46,7 +46,6 @@ class Model_Composite(nn.Module):
         self.train_accuracy.append(100*correct/processed)
         self.train_losses.append(train_loss)
 
-
     def model_test(self, device, test_loader, criterion):
         self.eval()
         test_loss = 0
@@ -72,6 +71,13 @@ class Model_Composite(nn.Module):
             abs(round(self.test_accuracy[-1] - self.train_accuracy[-1], 4))
         ))
 
+    def get_norm(self, n_channels, n_groups=2, type='bn'):
+        if type == 'bn':
+            return nn.BatchNorm2d(n_channels)
+        elif type == 'ln':
+            return nn.GroupNorm(1, n_channels)
+        elif type == 'gn':
+            return nn.GroupNorm(n_groups, n_channels)
 
     def plot_accuracy(self):
         epochs = list(range(1, len(self.train_accuracy) + 1))
@@ -84,3 +90,14 @@ class Model_Composite(nn.Module):
         plt.plot(epochs, self.train_losses, label='Train loss')
         plt.plot(epochs, self.test_losses, label='Test loss')
         plt.legend()
+
+    def get_incorrect_pred(self, device, test_loader, top_n=10):
+        with torch.no_grad():
+            data, target = next(iter(test_loader))
+            data, target = data.to(device), target.to(device)
+            output = self(data)
+            pred = output.argmax(dim=1)
+            compare = pred.eq(target)
+            incorrect_indx = torch.where((compare == False), 1, 0).nonzero()
+            top_n_pred = incorrect_indx[:top_n].squeeze()
+            return data[top_n_pred], target[top_n_pred], pred[top_n_pred]

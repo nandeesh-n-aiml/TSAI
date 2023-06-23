@@ -11,8 +11,9 @@ def set_seed(seed):
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
 
-def visualize_images(images, labels, label_mapper=0, n_cols=3, figsize=(10,10)):
-    labels = list(labels.numpy())
+def visualize_images(images, labels, label_mapper=[], n_cols=3, figsize=(10,10), img_title=None):
+    if type(labels) == torch.Tensor:
+        labels = list(labels.numpy())
     mapper = {labels[i]: images[i] for i in range(images.shape[0])}
     mapper = dict(sorted(mapper.items(), key=lambda item: item[0]))
     
@@ -29,3 +30,5 @@ def visualize_images(images, labels, label_mapper=0, n_cols=3, figsize=(10,10)):
             axs[row_indx][indx%n_cols].set_title(lbl)
         else:
             axs[row_indx][indx%n_cols].set_title(label_mapper[lbl] + f' ({lbl})')
+    if type(img_title) is not None:
+        fig.suptitle(img_title)
