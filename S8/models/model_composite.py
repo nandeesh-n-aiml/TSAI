@@ -11,6 +11,8 @@ class Model_Composite(nn.Module):
         self.test_accuracy = []
         self.train_losses = []
         self.test_losses = []
+        self.norm_type = 'bn'
+        self.n_groups = 2
 
     def model_train(self, device, train_loader, criterion, optimizer):
         self.train()
@@ -71,13 +73,13 @@ class Model_Composite(nn.Module):
             abs(round(self.test_accuracy[-1] - self.train_accuracy[-1], 4))
         ))
 
-    def get_norm(self, n_channels, n_groups=2, type='bn'):
-        if type == 'bn':
+    def get_norm(self, n_channels):
+        if self.norm_type == 'bn':
             return nn.BatchNorm2d(n_channels)
-        elif type == 'ln':
+        elif self.norm_type == 'ln':
             return nn.GroupNorm(1, n_channels)
-        elif type == 'gn':
-            return nn.GroupNorm(n_groups, n_channels)
+        elif self.norm_type == 'gn':
+            return nn.GroupNorm(self.n_groups, n_channels)
 
     def plot_accuracy(self):
         epochs = list(range(1, len(self.train_accuracy) + 1))

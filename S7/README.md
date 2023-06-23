@@ -2,7 +2,7 @@
 - The CNN model should achieve a minimum of 99.4% test accuracy.
 - The model should achieve 99.4% test accuracy at least 2 times in 15 epochs.
 - The model should be trained less than 15 epochs.
-- The maximum number of parameters is 8k.  
+- The maximum number of parameters is 8k.
 
 ## Experiments
 
