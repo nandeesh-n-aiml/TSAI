@@ -4,7 +4,16 @@ from . import data_transforms
 from . import utils
 
 class Dataset:
-    def __init__(self, dataset_name, normalize=True):
+    """ Implements pytorch compatible datasets
+    """
+
+    def __init__(self, dataset_name: str, normalize: bool=True):
+        """ Constructor to initialize dataset
+
+        Args:
+            dataset_name: Dataset name. Ex: MNIST, CIFAR10 etc.
+            normalize: Flag that indicates if the dataset needs to be normalized or not
+        """
         self.dataset_name = dataset_name
         self.dt = data_transforms.DataTransform()
         self.set_dataloader_cfgs()
@@ -14,6 +23,8 @@ class Dataset:
             self.normalize_dataset()
 
     def set_dataloader_cfgs(self):
+        """ Set configs for `torch.utils.data.DataLoader` instance based on the device (CPU/CUDA).
+        """
         dataloader_cfgs = {
             'batch_size': 128,
             'shuffle': True
@@ -24,7 +35,9 @@ class Dataset:
         self.dataloader_cfgs = dataloader_cfgs
         return self
     
-    def get_moments(self):
+    def get_moments(self) -> tuple:
+        """ Get mean and SD for a given dataset.
+        """
         if self.dataset_name == 'MNIST':
             train_data = self.train.transform(self.train.data.numpy())
             mean, std = (torch.mean(train_data).tolist(), ), (torch.std(train_data).tolist(), )
@@ -35,14 +48,22 @@ class Dataset:
         return (mean, std)
 
     def set_train_data(self):
+        """ Initialize train dataset and sets the reference to `train` property.
+        Downloads the dataset if its unavailable in the local directory.
+        """
         self.train = getattr(datasets, self.dataset_name)('../data', train=True, download=True, transform=self.dt.train_transforms)
         return self
 
     def set_test_data(self):
+        """ Initialize test dataset and sets the reference to `test` property.
+        Downloads the dataset if its unavailable in the local directory.
+        """
         self.test = getattr(datasets, self.dataset_name)('../data', train=False, download=True, transform=self.dt.test_transforms)
         return self
 
-    def normalize_dataset(self):
+    def normalize_dataset(self) -> None:
+        """ Normalize dataset based on the mean and SD computed for a dataset.
+        """
         mean, std = self.get_moments()
         mean, std = tuple(mean), tuple(std)
         self.dt \
@@ -53,8 +74,12 @@ class Dataset:
         self.set_train_data() \
             .set_test_data()
 
-    # train & test dataloaders
-    def get_data_loaders(self, reset=True):
+    def get_data_loaders(self, reset=True) -> tuple:
+        """ Get train & test dataloaders
+
+        Args:
+            reset: Initialize train and test datasets
+        """
         if reset:
             self.set_train_data() \
                 .set_test_data()
