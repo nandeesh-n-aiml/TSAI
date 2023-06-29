@@ -2,12 +2,14 @@
 TARGET:
     - Add depthwise convolution followed by 1x1 convolution
     - Add dilated conv instead of strided conv
+    - Implement OneCycleLR policy
+    - Achieve test accuracy of 85%
 RESULT:
     - Parameters: 171,680
-    - Best training accuracy: 76.54%
-    - Best testing accuracy: 84.54%
+    - Best training accuracy: 79.404%
+    - Best testing accuracy: 86.61%
 ANALYSIS:
-    - The test accuracy is improved compared to the previous model
+    - The test accuracy is improved and the target is achieved
     - The model is under-fitting due to regularization
 """
 
@@ -64,7 +66,7 @@ class Net_5(mc.Model_Composite):
             nn.Dropout(dropout_val)
         )
         self.conv6 = nn.Sequential(
-            nn.Conv2d(32, 32, 3, stride=2, bias=False), # strided conv
+            nn.Conv2d(32, 32, 3, padding=1, dilation=2, bias=False), # dilated conv
             self.get_norm(32),
                 nn.ReLU(),
             nn.Dropout(dropout_val)
@@ -126,9 +128,7 @@ class Net_5(mc.Model_Composite):
     def forward(self, x):
         # BLOCK 1
         x = self.conv1(x)
-        identity = x
         x = self.conv2(x)
-        x = x.clone() + identity
         x = self.conv3(x)
         
         # BLOCK 2
@@ -140,9 +140,7 @@ class Net_5(mc.Model_Composite):
         
         # BLOCK 3
         x = self.conv7(x)
-        identity = x
         x = self.conv8(x)
-        x = x.clone() + identity
         x = self.conv9(x)
         
         # BLOCK 4
