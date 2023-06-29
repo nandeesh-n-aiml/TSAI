@@ -7,6 +7,7 @@ RESULT:
     - Best testing accuracy: 79.61%
 ANALYSIS:
     - Achieved a similar test accuracy with 21K reduction in parameters compared to the previous model
+    - Still the model needs more capacity to reach 85% test accuracy
 """
 
 import torch.nn as nn

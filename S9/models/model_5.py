@@ -1,113 +1,125 @@
 """
 TARGET:
     - Add depthwise convolution followed by 1x1 convolution
-    - Add dilated conv instead of strided conv in block 3
-    - Implement OneCycleLR policy
+    - Add dilated conv instead of strided conv
 RESULT:
-    - Parameters: 42,896
-    - Best training accuracy: 87.46%
-    - Best testing accuracy: 82.18%
+    - Parameters: 171,680
+    - Best training accuracy: 76.54%
+    - Best testing accuracy: 84.54%
 ANALYSIS:
     - The test accuracy is improved compared to the previous model
-    - The model is slightly over-fitting and will not be able to achieve 85% accuracy
+    - The model is under-fitting due to regularization
 """
 
 import torch.nn as nn
 import torch.nn.functional as F
 from . import model_composite as mc
 
-class Net_4(mc.Model_Composite):
+class Net_5(mc.Model_Composite):
     def __init__(self, in_ch, norm_type='bn'):
-        super(Net_4, self).__init__()
+        super(Net_5, self).__init__()
         dropout_val = 0.05
 
         self.norm_type = norm_type
 
         # BLOCK 1
         self.conv1 = nn.Sequential(
-            nn.Conv2d(in_ch, 16, 3, padding=1, bias=False),
-            self.get_norm(16),
+            nn.Conv2d(in_ch, 32, 3, padding=1, bias=False),
+            self.get_norm(32),
                 nn.ReLU(),
             nn.Dropout(dropout_val)
-        )        
+        )
         self.conv2 = nn.Sequential(
-            nn.Conv2d(16, 16, 3, padding=1, groups=16, bias=False), # depth-wise separable conv + 1x1 conv
-            nn.Conv2d(16, 16, 1, bias=False),
-            self.get_norm(16),
+            nn.Conv2d(32, 32, 3, padding=1, groups=32, bias=False), # depth-wise separable conv
+            self.get_norm(32),
+                nn.ReLU(),
+            nn.Dropout(dropout_val),
+            nn.Conv2d(32, 32, 1, bias=False), # point-wise conv
+            self.get_norm(32),
                 nn.ReLU(),
             nn.Dropout(dropout_val)
-        )        
+        )
         self.conv3 = nn.Sequential(
-            nn.Conv2d(16, 16, 3, stride=2, bias=False), # strided conv
-            self.get_norm(16),
+            nn.Conv2d(32, 32, 3, stride=2, bias=False), # strided conv
+            self.get_norm(32),
                 nn.ReLU(),
             nn.Dropout(dropout_val)
         )
 
         # BLOCK 2
         self.conv4 = nn.Sequential(
-            nn.Conv2d(16, 16, 3, padding=1, bias=False),
-            self.get_norm(16),
+            nn.Conv2d(32, 32, 3, padding=1, bias=False),
+            self.get_norm(32),
                 nn.ReLU(),
             nn.Dropout(dropout_val)
-        )        
+        )
         self.conv5 = nn.Sequential(
-            nn.Conv2d(16, 16, 3, padding=1, groups=16, bias=False), # depth-wise separable conv + 1x1 conv
-            nn.Conv2d(16, 16, 1, bias=False),
-            self.get_norm(16),
+            nn.Conv2d(32, 32, 3, padding=1, groups=32, bias=False), # depth-wise separable conv
+            self.get_norm(32),
+                nn.ReLU(),
+            nn.Dropout(dropout_val),
+            nn.Conv2d(32, 32, 1, bias=False), # point-wise conv
+            self.get_norm(32),
                 nn.ReLU(),
             nn.Dropout(dropout_val)
-        )        
+        )
         self.conv6 = nn.Sequential(
-            nn.Conv2d(16, 16, 3, stride=2, bias=False), # strided conv
-            self.get_norm(16),
+            nn.Conv2d(32, 32, 3, stride=2, bias=False), # strided conv
+            self.get_norm(32),
                 nn.ReLU(),
             nn.Dropout(dropout_val)
         )
 
         # BLOCK 3
         self.conv7 = nn.Sequential(
-            nn.Conv2d(16, 32, 3, padding=1, bias=False),
-            self.get_norm(32),
+            nn.Conv2d(32, 64, 3, padding=1, bias=False),
+            self.get_norm(64),
                 nn.ReLU(),
             nn.Dropout(dropout_val)
-        )        
+        )
         self.conv8 = nn.Sequential(
-            nn.Conv2d(32, 32, 3, padding=1, groups=32, bias=False), # depth-wise separable conv + 1x1 conv
-            nn.Conv2d(32, 32, 1, bias=False),
-            self.get_norm(32),
+            nn.Conv2d(64, 64, 3, padding=1, groups=64, bias=False), # depth-wise separable conv
+            self.get_norm(64),
+                nn.ReLU(),
+            nn.Dropout(dropout_val),
+            nn.Conv2d(64, 64, 1, bias=False), # point-wise conv
+            self.get_norm(64),
                 nn.ReLU(),
             nn.Dropout(dropout_val)
-        )        
+        )
         self.conv9 = nn.Sequential(
-            nn.Conv2d(32, 32, 3, padding=1, dilation=2, bias=False), # dilated conv
-            self.get_norm(32),
+            nn.Conv2d(64, 64, 3, stride=2, bias=False), # strided conv
+            self.get_norm(64),
                 nn.ReLU(),
             nn.Dropout(dropout_val)
         )
 
         # BLOCK 4
         self.conv10 = nn.Sequential(
-            nn.Conv2d(32, 32, 3, padding=1, bias=False),
-            self.get_norm(32),
+            nn.Conv2d(64, 64, 3, padding=1, bias=False),
+            self.get_norm(64),
                 nn.ReLU(),
             nn.Dropout(dropout_val)
-        )        
+        )
         self.conv11 = nn.Sequential(
-            nn.Conv2d(32, 32, 3, padding=1, bias=False),
-            self.get_norm(32),
+            nn.Conv2d(64, 64, 3, padding=1, groups=64, bias=False), # depth-wise separable conv
+            self.get_norm(64),
+                nn.ReLU(),
+            nn.Dropout(dropout_val),
+            nn.Conv2d(64, 64, 1, bias=False), # point-wise conv
+            self.get_norm(64),
                 nn.ReLU(),
             nn.Dropout(dropout_val)
-        )        
+        )
         self.conv12 = nn.Sequential(
-            nn.Conv2d(32, 32, 3, padding=1, groups=32, bias=False), # depth-wise separable conv
-            self.get_norm(32),
+            nn.Conv2d(64, 64, 3, padding=1, dilation=2, bias=False), # dilated conv
+            self.get_norm(64),
                 nn.ReLU(),
             nn.Dropout(dropout_val)
         )
 
         self.last = nn.Sequential(
-            nn.Conv2d(32, 10, 1, bias=False),
+            nn.Conv2d(64, 10, 1, bias=False),
             nn.AdaptiveAvgPool2d((1, 1))
         )
 

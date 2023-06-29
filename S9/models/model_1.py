@@ -7,7 +7,7 @@ RESULT:
     - Best training accuracy: 83.93%
     - Best testing accuracy: 81.23%
 ANALYSIS:
-    - Model will not train beyond ~80%
+    - Model needs more capacity to achieve 85% accuracy
 """
 
 import torch.nn as nn

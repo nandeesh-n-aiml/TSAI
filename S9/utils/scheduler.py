@@ -8,6 +8,10 @@ class Scheduler:
 
     def __init__(self, type: str, kwargs: dict):
         """ Constructor to initialize scheduler
+
+        Args:
+            type: scheduler type
+            kwargs: keyword arguments required to initialize the scheduler
         """
         self.lr_change = []
         self.scheduler_type = type
