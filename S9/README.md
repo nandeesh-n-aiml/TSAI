@@ -124,7 +124,9 @@ Estimated Total Size (MB): 6.15
 ```
 
 #### VISUALIZATIONS:  
-- Accuracy and loss plots
+- Accuracy and loss plots  
+The test accuracy is higher than the train accuracy because of the regularization techniques. The model is capable enough to learn and pass on the learnings across epochs.  
+
 <img src="images/model_5_1.png" />  
 
 - Incorrect predictions
