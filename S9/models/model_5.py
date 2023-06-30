@@ -5,9 +5,9 @@ TARGET:
     - Implement OneCycleLR policy
     - Achieve test accuracy of 85%
 RESULT:
-    - Parameters: 171,680
-    - Best training accuracy: 79.404%
-    - Best testing accuracy: 86.61%
+    - Parameters: 131,776
+    - Best training accuracy: 80.9%
+    - Best testing accuracy: 86.91%
 ANALYSIS:
     - The test accuracy is improved and the target is achieved
     - The model is under-fitting due to regularization
@@ -20,7 +20,7 @@ from . import model_composite as mc
 class Net_5(mc.Model_Composite):
     def __init__(self, in_ch, norm_type='bn'):
         super(Net_5, self).__init__()
-        dropout_val = 0.05
+        dropout_val = 0.01
 
         self.norm_type = norm_type
 
@@ -50,7 +50,11 @@ class Net_5(mc.Model_Composite):
 
         # BLOCK 2
         self.conv4 = nn.Sequential(
-            nn.Conv2d(32, 32, 3, padding=1, bias=False),
+            nn.Conv2d(32, 32, 3, padding=1, groups=32, bias=False), # depth-wise separable conv
+            self.get_norm(32),
+                nn.ReLU(),
+            nn.Dropout(dropout_val),
+            nn.Conv2d(32, 32, 1, bias=False), # point-wise conv
             self.get_norm(32),
                 nn.ReLU(),
             nn.Dropout(dropout_val)
@@ -98,7 +102,11 @@ class Net_5(mc.Model_Composite):
 
         # BLOCK 4
         self.conv10 = nn.Sequential(
-            nn.Conv2d(64, 64, 3, padding=1, bias=False),
+            nn.Conv2d(64, 64, 3, padding=1, groups=64, bias=False), # depth-wise separable conv
+            self.get_norm(64),
+                nn.ReLU(),
+            nn.Dropout(dropout_val),
+            nn.Conv2d(64, 64, 1, bias=False), # point-wise conv
             self.get_norm(64),
                 nn.ReLU(),
             nn.Dropout(dropout_val)
@@ -128,7 +136,9 @@ class Net_5(mc.Model_Composite):
     def forward(self, x):
         # BLOCK 1
         x = self.conv1(x)
+        identity = x
         x = self.conv2(x)
+        x = x.clone() + identity
         x = self.conv3(x)
         
         # BLOCK 2
@@ -140,7 +150,9 @@ class Net_5(mc.Model_Composite):
         
         # BLOCK 3
         x = self.conv7(x)
+        identity = x
         x = self.conv8(x)
+        x = x.clone() + identity
         x = self.conv9(x)
         
         # BLOCK 4
