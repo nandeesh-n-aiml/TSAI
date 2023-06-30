@@ -33,6 +33,8 @@
   - The model is under-fitting due to regularization
 
 #### MODEL ARCHITECTURE:
+[The final model code snippet](./models/model_5.py)
+
 ```
 ----------------------------------------------------------------
         Layer (type)               Output Shape         Param #
