@@ -23,27 +23,25 @@ class CustomResNet(mc.Model_Composite):
         self.prep_layer = self.get_conv_bn(in_ch, 64)
 
         # Layer 1
-        self.layer1 = self.get_conv_bn(64, 128)
-        self.pool1 = nn.MaxPool2d(2, 2)
+        self.layer1 = self.get_conv_bn(64, 128, True)
         self.residual1 = self.get_residual(128, 128)
 
         # Layer 2
-        self.layer2 = self.get_conv_bn(128, 256)
-        self.pool2 = nn.MaxPool2d(2, 2)
+        self.layer2 = self.get_conv_bn(128, 256, True)
 
         # Layer 3
-        self.layer3 = self.get_conv_bn(256, 512)
-        self.pool3 = nn.MaxPool2d(2, 2)
+        self.layer3 = self.get_conv_bn(256, 512, True)
         self.residual2 = self.get_residual(512, 512)
 
         # Classification
-        self.pool4 = nn.MaxPool2d(kernel_size=4, stride=2)
+        self.pool = nn.MaxPool2d(kernel_size=4, stride=2)
         self.flatten = nn.Flatten()
         self.fc = nn.Linear(512, 10, bias=False)
 
-    def get_conv_bn(self, in_ch, out_ch):
+    def get_conv_bn(self, in_ch, out_ch, pool=False):
         return nn.Sequential(
             nn.Conv2d(in_ch, out_ch, 3, stride=1, padding=1, bias=False),
+            nn.MaxPool2d(2, 2) if pool else nn.Sequential(),
             self.get_norm(out_ch),
                 nn.ReLU()
         )
@@ -58,19 +56,16 @@ class CustomResNet(mc.Model_Composite):
         x = self.prep_layer(x)
 
         x = self.layer1(x)
-        x = self.pool1(x)
         res1 = self.residual1(x)
         x = x + res1
 
         x = self.layer2(x)
-        x = self.pool2(x)
 
         x = self.layer3(x)
-        x = self.pool3(x)
         res2 = self.residual2(x)
         x = x + res2
 
-        x = self.pool4(x)
+        x = self.pool(x)
         x = self.flatten(x)
         x = self.fc(x)
         x = x.view(-1, 10)

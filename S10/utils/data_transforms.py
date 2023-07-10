@@ -78,7 +78,7 @@ class DataTransform:
             normalize: Flag that indicates if the dataset needs to be normalized or not
         """
         if normalize:
-            list_of_transforms.append(A.Normalize(self.mean, self.std))
+            list_of_transforms.insert(0, A.Normalize(self.mean, self.std))
         list_of_transforms.append(ToTensorV2())
         if dataset_type == 'train':
             self.train_transforms = A.Compose(list_of_transforms)

@@ -77,7 +77,6 @@ class Dataset:
             Downloads the dataset if its unavailable in the local directory.
         """
         self.train = self.dataset_fn('../data', train=True, download=True, transform=self.dt.train_transforms)
-        # self.train = getattr(datasets, self.dataset_name)('../data', train=True, download=True, transform=self.dt.train_transforms)
         self.train.trans_lib = self.trans_lib
         return self
 
@@ -86,7 +85,6 @@ class Dataset:
             Downloads the dataset if its unavailable in the local directory.
         """
         self.test = self.dataset_fn('../data', train=False, download=True, transform=self.dt.test_transforms)
-        # self.test = getattr(datasets, self.dataset_name)('../data', train=False, download=True, transform=self.dt.test_transforms)
         self.test.trans_lib = self.trans_lib
         return self
 
