@@ -3,10 +3,11 @@ TARGET:
     - Build a custom ResNet model based on David C. Page model, DAWNBench challenge.
 RESULT:
     - Parameters: 6,573,120
-    - Best training accuracy: 99.94%
-    - Best testing accuracy: 88.57%
+    - Best training accuracy: 90.74%
+    - Best testing accuracy: 90.15%
 ANALYSIS:
-    - 
+    - The gap between train and test accuracies are very low which is indeed a good sign as the model is generalizable.
+    - Using the ResNet kind architecture, LRFinder, and OneCycleLR, a testing accuracy of 90% is achieved.
 """
 
 import torch.nn as nn
@@ -14,9 +15,16 @@ import torch.nn.functional as F
 from . import model_composite as mc
 
 class CustomResNet(mc.Model_Composite):
-    def __init__(self, in_ch, norm_type='bn'):
+    """ Custom ResNet model based on David C. Page's model for DAWNBench challenge.
+    """
+    def __init__(self, in_ch: int, norm_type: str='bn'):
+        """ Initialization of the custom ResNet model.
+
+        Args:
+            in_ch: input channels
+            norm_type: type of normalization
+        """
         super(CustomResNet, self).__init__()
-        # dropout_val = 0.01
         self.norm_type = norm_type
 
         # Preparation Layer
@@ -38,7 +46,14 @@ class CustomResNet(mc.Model_Composite):
         self.flatten = nn.Flatten()
         self.fc = nn.Linear(512, 10, bias=False)
 
-    def get_conv_bn(self, in_ch, out_ch, pool=False):
+    def get_conv_bn(self, in_ch: int, out_ch: int, pool: bool=False):
+        """ Get a convolutional layer with an optional pooling layer
+
+        Args:
+            in_ch: input channels
+            out_ch: output channels
+            pool: flag to indicate of pooling is required
+        """
         return nn.Sequential(
             nn.Conv2d(in_ch, out_ch, 3, stride=1, padding=1, bias=False),
             nn.MaxPool2d(2, 2) if pool else nn.Sequential(),
@@ -46,13 +61,21 @@ class CustomResNet(mc.Model_Composite):
                 nn.ReLU()
         )
     
-    def get_residual(self, in_ch, out_ch):
+    def get_residual(self, in_ch: int, out_ch: int):
+        """ Get a residual block
+
+        Args:
+            in_ch: input channels
+            out_ch: output channels
+        """
         return nn.Sequential(
             self.get_conv_bn(in_ch, out_ch),
             self.get_conv_bn(in_ch, out_ch)
         )
 
     def forward(self, x):
+        """ Connecting across layers
+        """
         x = self.prep_layer(x)
 
         x = self.layer1(x)
