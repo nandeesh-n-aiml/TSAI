@@ -1,5 +1,5 @@
 ## Requirement
-- Write a custom ResNet architecture for CIFAR10 dataset using:
+- Write a custom ResNet architecture (David C. Page's model) for CIFAR10 dataset using:
   - Batch size = 512
   - Optimizer = Adam
   - Criterion = Cross entropy loss
@@ -24,8 +24,8 @@
     - Build a custom ResNet model based on David C. Page model, DAWNBench challenge.
 #### RESULT:
     - Parameters: 6,573,120
-    - Best training accuracy: 90.74%
-    - Best testing accuracy: 90.15%
+    - Best training accuracy: 96.59%
+    - Best testing accuracy: 92.62%
 #### ANALYSIS:
     - The gap between train and test accuracies are very low which is indeed a good sign as the model is generalizable.
     - Using the ResNet kind architecture, LRFinder, and OneCycleLR, a testing accuracy of 90% is achieved.
@@ -82,7 +82,7 @@ Estimated Total Size (MB): 31.53
 
 #### VISUALIZATIONS:  
 - Accuracy and loss plots  
-The test accuracy is higher than the train accuracy because of the regularization techniques. The model is capable enough to learn and pass on the learnings across epochs.  
+The test accuracy is higher than the train accuracy because of the regularization techniques. The model is capable enough to learn and pass on the learnings for test images across epochs.
 
 <img src="images/model.png" />  
 
