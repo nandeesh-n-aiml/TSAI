@@ -3,11 +3,11 @@ TARGET:
     - Build a custom ResNet model based on David C. Page model, DAWNBench challenge.
 RESULT:
     - Parameters: 6,573,120
-    - Best training accuracy: 90.74%
-    - Best testing accuracy: 90.15%
+    - Best training accuracy: 96.59%
+    - Best testing accuracy: 92.62%
 ANALYSIS:
     - The gap between train and test accuracies are very low which is indeed a good sign as the model is generalizable.
-    - Using the ResNet kind architecture, LRFinder, and OneCycleLR, a testing accuracy of 90% is achieved.
+    - Using the ResNet kind architecture, LRFinder, and OneCycleLR, a testing accuracy of 92.62% is achieved.
 """
 
 import torch.nn as nn
@@ -92,4 +92,4 @@ class CustomResNet(mc.Model_Composite):
         x = self.flatten(x)
         x = self.fc(x)
         x = x.view(-1, 10)
-        return F.log_softmax(x, dim=-1)
+        return x
