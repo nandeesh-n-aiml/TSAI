@@ -60,7 +60,7 @@ class Model_Composite(nn.Module):
             if scheduler is not None:
                 scheduler.step()
 
-            pbar.set_description(desc= f'Train: Loss={loss.item()} Batch_id={batch_idx} Accuracy={100*correct/processed:0.2f}')
+            pbar.set_description(desc= f'Train: Loss={loss.item()} Accuracy={100*correct/processed:0.2f}')
         
         self.train_accuracy.append(100*correct/processed)
         self.train_losses.append(train_loss)
