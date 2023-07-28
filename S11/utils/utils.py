@@ -1,11 +1,13 @@
 import torch
+import torch.optim as optim
+from torch_lr_finder import LRFinder
 import numpy as np
 import math
-import matplotlib.pyplot as plt
 from pytorch_grad_cam import GradCAM
 from pytorch_grad_cam.utils.image import show_cam_on_image
 from pytorch_grad_cam.utils.model_targets import ClassifierOutputTarget
 from lightning.fabric import Fabric
+import matplotlib.pyplot as plt
 
 cuda = torch.cuda.is_available()
 fabric = Fabric(accelerator='cuda', precision="bf16-mixed")
@@ -37,6 +39,35 @@ def denormalise(tensor: torch.Tensor, mean: list, std: list):
     for t, m, s in zip(result, mean, std):
         t.mul_(s).add_(m)
     return result
+
+def get_optimizer(type, model, **kwargs):
+    """ Get optimizer
+
+    Args:
+        type: Type of optimizer
+        model: CNN model
+        kwargs: key word args for optimizer
+    """
+    if type == 'SGD':
+        return optim.SGD(model.parameters(), **kwargs)
+    elif type == 'ADAM':
+        return optim.Adam(model.parameters(), **kwargs)
+    
+def get_best_lr(model, train_loader, criterion, optimizer) -> float:
+    """ Get max LR using `LRFinder` class.
+
+    Args:
+        model: CNN model
+        train_loader: train data loader instance of `torch.utils.data.DataLoader`
+        criterion: loss function
+        optim_type: Type of optimizer to use
+        kwargs: key word args for optimizer
+    """
+    lr_finder = LRFinder(model, optimizer, criterion, device=get_device())
+    lr_finder.range_test(train_loader, end_lr=10, num_iter=100, step_mode="exp")
+    _, max_lr = lr_finder.plot() # to inspect the loss-learning rate graph
+    lr_finder.reset() # to reset the model and optimizer to their initial state
+    return max_lr
 
 def visualize_images(images: torch.Tensor,
                      labels: list,
