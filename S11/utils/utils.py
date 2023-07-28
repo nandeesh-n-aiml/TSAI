@@ -88,7 +88,7 @@ def visualize_imgs_with_gradcam(model,
     """
 
     # Define the target layer for GradCAM
-    target_layers = [model.layer4[-1]]
+    target_layers = [model.layer3[-1]]
     # Create a GradCAM object
     gradcam = GradCAM(model=model, target_layers=target_layers, use_cuda=True)
     mapper = {}
@@ -102,6 +102,7 @@ def visualize_imgs_with_gradcam(model,
         mapper[labels[indx]] = dnorm_image
         mapper[str(indx + 1) + ' GradCAM'] = cam_image
     plot_images(mapper, n_cols=n_cols, figsize=figsize, img_title=img_title)
+    plt.tight_layout()
 
 def plot_images(mapper: dict, label_mapper: list=[], n_cols=3, figsize=(10,10), img_title=None) -> None:
     """ Plot images using matplotlib library
